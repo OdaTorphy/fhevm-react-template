@@ -4,6 +4,12 @@
 
 **🎯 Built for the Zama Bounty Challenge** - A complete, reusable SDK that makes building confidential frontends simple, consistent, and developer-friendly.
 
+**🌐 Live Example**: [https://fhe-pollution-monitor.vercel.app/](https://fhe-pollution-monitor.vercel.app/)
+
+**💻 GitHub**: [https://github.com/OdaTorphy/fhevm-react-template](https://github.com/OdaTorphy/fhevm-react-template)
+
+**📹 Demo Video**: Download `demo.mp4` to watch the full demonstration (streaming not available)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![FHEVM](https://img.shields.io/badge/FHEVM-Zama-purple)](https://docs.zama.ai/fhevm)
@@ -394,7 +400,7 @@ npm run format             # Format code
 
 ## 🎥 Video Demo
 
-**📹 Watch the Demo**: [demo.mp4](./demo.mp4)
+**📹 Watch the Demo**: [demo.mp4]
 
 The video demonstrates:
 1. SDK installation and setup (< 10 lines)
