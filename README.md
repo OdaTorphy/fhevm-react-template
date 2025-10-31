@@ -105,18 +105,39 @@ fhevm-react-template/
 │   └── fhevm-sdk/              # Core SDK package
 │       ├── src/
 │       │   ├── core/           # Framework-agnostic core
-│       │   ├── react/          # React hooks
+│       │   │   ├── client.ts   # Main FHEVM client
+│       │   │   ├── encrypt.ts  # Encryption utilities
+│       │   │   ├── decrypt.ts  # Decryption utilities
+│       │   │   └── types.ts    # Type definitions
+│       │   ├── react/          # React hooks & provider
+│       │   │   └── index.tsx   # React adapters
 │       │   ├── vue/            # Vue composables
-│       │   └── types/          # TypeScript definitions
+│       │   │   └── index.tsx   # Vue adapters
+│       │   ├── utils/          # Utility functions
+│       │   │   ├── errors.ts   # Custom error classes
+│       │   │   └── helpers.ts  # Helper functions
+│       │   └── index.ts        # Main entry point
 │       └── package.json
+│
+├── templates/                   # Ready-to-use templates
+│   ├── nextjs/                 # Next.js template (symbolic link)
+│   └── react/                  # React template (symbolic link)
 │
 ├── examples/
 │   ├── nextjs-pollution-monitor/    # Full-featured Next.js application
+│   │   ├── components/
+│   │   │   ├── examples/       # Banking & Medical examples
+│   │   │   ├── fhe/           # FHE components
+│   │   │   └── ui/            # UI components
+│   │   ├── app/               # Next.js App Router
+│   │   ├── hooks/             # Custom hooks
+│   │   └── lib/               # Utilities
 │   ├── react-basic/                 # Minimal React setup
 │   ├── node-cli/                    # Command-line encryption tool
-│   └── PrivacyPollutionMonitor/     # Solidity contracts example
+│   └── PrivacyPollutionMonitor/     # React pollution monitor with full FHE encryption
 │
 ├── contracts/                   # Example smart contracts
+├── docs/                        # Documentation files
 └── README.md                    # This file
 ```
 
@@ -291,11 +312,11 @@ const handleEncrypt = async () => {
 
 ## 📋 SDK Integration Examples
 
-This repository includes three comprehensive examples demonstrating FHEVM SDK integration across different environments:
+This repository includes four comprehensive examples demonstrating FHEVM SDK integration across different environments:
 
 ### 1. Next.js Full-Featured Application
 
-**Location**: `examples/nextjs-pollution-monitor/`
+**Location**: `examples/nextjs-pollution-monitor/` or `templates/nextjs/`
 
 A complete production-ready Next.js application showcasing:
 - ✅ Station registration with encrypted data
@@ -306,6 +327,8 @@ A complete production-ready Next.js application showcasing:
 - ✅ Real-time encrypted dashboard
 - ✅ MetaMask integration
 - ✅ Sepolia testnet deployment
+- ✅ Banking Example: Confidential transactions
+- ✅ Medical Example: Privacy-preserving health records
 
 **Quick Start:**
 ```bash
@@ -320,13 +343,14 @@ See [examples/nextjs-pollution-monitor/README.md](./examples/nextjs-pollution-mo
 
 ### 2. React Basic Example
 
-**Location**: `examples/react-basic/`
+**Location**: `examples/react-basic/` or `templates/react/`
 
 A minimal React setup perfect for learning FHEVM SDK basics:
 - ✅ Basic encryption demonstration
 - ✅ Simple UI with loading states
 - ✅ Error handling
 - ✅ Educational info panel
+- ✅ Perfect starting point for new projects
 
 **Quick Start:**
 ```bash
@@ -360,6 +384,33 @@ node index.js encrypt 42 --contract 0xYourContractAddress --type uint64
 ```
 
 See [examples/node-cli/README.md](./examples/node-cli/README.md) for details.
+
+### 4. Privacy Pollution Monitor - React Edition
+
+**Location**: `examples/PrivacyPollutionMonitor/`
+
+A comprehensive environmental monitoring application with full FHEVM encryption:
+- ✅ Station registration and management
+- ✅ Encrypted pollution reporting (uint32, uint8)
+- ✅ Multiple pollutant types (PM2.5, PM10, SO2, NOx, Ozone, etc.)
+- ✅ Encrypted alert thresholds
+- ✅ Real-time dashboard with statistics
+- ✅ Full FHEVM SDK integration with React hooks
+- ✅ Component-based architecture
+- ✅ Production-ready React application
+
+**Quick Start:**
+```bash
+cd examples/PrivacyPollutionMonitor
+npm install
+npm run dev
+```
+
+Visit `http://localhost:3001`
+
+See [examples/PrivacyPollutionMonitor/README-REACT.md](./examples/PrivacyPollutionMonitor/README-REACT.md) for details.
+
+**Note**: This example also includes a legacy static HTML version (`index.html` + `app.js`) for comparison. The React version (`src/`) demonstrates modern best practices with full SDK integration.
 
 ---
 
@@ -436,6 +487,7 @@ npm run format             # Format code
 
 - **[React Basic](./examples/react-basic/)** - Minimal React setup for learning SDK basics
 - **[Next.js Application](./examples/nextjs-pollution-monitor/)** - Production-ready confidential monitoring system
+- **[Privacy Pollution Monitor](./examples/PrivacyPollutionMonitor/)** - Comprehensive React app with full FHE encryption
 - **[Node.js CLI](./examples/node-cli/)** - Command-line encryption and testing tool
 
 ---
