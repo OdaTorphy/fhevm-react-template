@@ -33,23 +33,53 @@ Visit `http://localhost:3000`
 ## 🏗️ Architecture
 
 ```
-Next.js App
-├── FHEVM SDK Integration
-│   ├── FhevmProvider (React Context)
-│   ├── useFhevmClient hook
-│   ├── useEncrypt hook
-│   └── useDecrypt hook
+Next.js Application Structure
+├── app/                          # App Router (Next.js 13+)
+│   ├── layout.tsx                # Root layout with FHE provider
+│   ├── page.tsx                  # Home page
+│   ├── globals.css               # Global styles
+│   └── api/                      # API Routes
+│       ├── fhe/                  # FHE operations
+│       │   ├── route.ts          # Main FHE endpoint
+│       │   ├── encrypt/route.ts  # Encryption API
+│       │   ├── decrypt/route.ts  # Decryption API
+│       │   └── compute/route.ts  # Homomorphic computation
+│       └── keys/route.ts         # Key management API
 │
-├── Components
-│   ├── StationRegistration
-│   ├── PollutionReporter
-│   ├── DashboardView
-│   └── WalletConnect
+├── components/                   # React Components
+│   ├── ui/                       # Base UI components
+│   │   ├── Button.tsx
+│   │   ├── Input.tsx
+│   │   └── Card.tsx
+│   ├── fhe/                      # FHE functionality
+│   │   ├── FHEProvider.tsx       # FHE context provider
+│   │   ├── EncryptionDemo.tsx    # Encryption demonstration
+│   │   ├── ComputationDemo.tsx   # Computation demonstration
+│   │   └── KeyManager.tsx        # Key management UI
+│   ├── StationRegistration.tsx
+│   ├── PollutionReporter.tsx
+│   ├── Dashboard.tsx
+│   └── WalletConnect.tsx
 │
-└── Contract Interaction
-    ├── PrivacyPollutionMonitor.sol
-    ├── Encrypted submissions
-    └── EIP-712 decryption
+├── lib/                          # Library utilities
+│   ├── fhe/                      # FHE integration
+│   │   ├── client.ts             # Client-side FHE operations
+│   │   ├── server.ts             # Server-side FHE operations
+│   │   ├── keys.ts               # Key management
+│   │   └── types.ts              # FHE type definitions
+│   ├── utils/                    # Utility functions
+│   │   ├── security.ts           # Security utilities
+│   │   └── validation.ts         # Validation helpers
+│   └── contract.ts               # Smart contract integration
+│
+├── hooks/                        # Custom React Hooks
+│   ├── useFHE.ts                 # FHE client hook
+│   ├── useEncryption.ts          # Encryption hook
+│   └── useComputation.ts         # Computation hook
+│
+└── types/                        # TypeScript definitions
+    ├── fhe.ts                    # FHE type definitions
+    └── api.ts                    # API type definitions
 ```
 
 ---
@@ -232,34 +262,171 @@ export default function RootLayout({ children }) {
 
 ---
 
-## 📦 Project Structure
+## 🔌 API Routes
 
+### FHE Operations API
+
+#### GET/POST `/api/fhe`
+Main FHE endpoint providing API status and information.
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "endpoints": {
+    "encrypt": "/api/fhe/encrypt",
+    "decrypt": "/api/fhe/decrypt",
+    "compute": "/api/fhe/compute"
+  },
+  "version": "1.0.0"
+}
 ```
-nextjs-pollution-monitor/
-├── app/
-│   ├── layout.tsx              # FHEVM Provider setup
-│   ├── page.tsx                # Home page
-│   ├── dashboard/
-│   │   └── page.tsx            # Dashboard
-│   └── station/
-│       └── page.tsx            # Station management
-│
-├── components/
-│   ├── StationRegistration.tsx
-│   ├── PollutionReporter.tsx
-│   ├── ReportsList.tsx
-│   ├── WalletConnect.tsx
-│   └── StatsCard.tsx
-│
-├── lib/
-│   ├── contract.ts             # Contract ABI and address
-│   └── utils.ts                # Helper functions
-│
-├── public/
-│   └── assets/
-│
-└── package.json
+
+#### POST `/api/fhe/encrypt`
+Encrypt values using FHE.
+
+**Request:**
+```json
+{
+  "value": 42,
+  "type": "uint64"
+}
 ```
+
+**Response:**
+```json
+{
+  "success": true,
+  "encrypted": {
+    "type": "uint64",
+    "value": "42",
+    "timestamp": 1234567890
+  },
+  "message": "Value encrypted successfully"
+}
+```
+
+#### POST `/api/fhe/decrypt`
+Decrypt encrypted data with EIP-712 signature.
+
+**Request:**
+```json
+{
+  "encryptedData": "0x...",
+  "signature": "0x...",
+  "contractAddress": "0x..."
+}
+```
+
+#### POST `/api/fhe/compute`
+Perform homomorphic computations.
+
+**Request:**
+```json
+{
+  "operation": "add",
+  "operands": ["0x...", "0x..."]
+}
+```
+
+#### GET `/api/keys`
+Retrieve public key for encryption.
+
+**Query Parameters:**
+- `contract`: Contract address (required)
+
+---
+
+## 🪝 Custom Hooks
+
+### `useFHE(contractAddress?)`
+Initialize and manage FHE client.
+
+```tsx
+const { client, isInitialized, isInitializing, error, initialize } = useFHE();
+```
+
+### `useEncryption()`
+Handle encryption operations.
+
+```tsx
+const { encrypt, isEncrypting, result, error, reset } = useEncryption();
+
+await encrypt(42, 'uint64');
+```
+
+### `useComputation()`
+Handle homomorphic computations.
+
+```tsx
+const { compute, isComputing, result, error, reset } = useComputation();
+
+await compute('add', [encryptedValue1, encryptedValue2]);
+```
+
+---
+
+## 📦 Components Library
+
+### UI Components (`components/ui/`)
+
+#### Button
+Reusable button component with loading states.
+
+```tsx
+<Button variant="primary" size="md" isLoading={false}>
+  Click Me
+</Button>
+```
+
+**Props:**
+- `variant`: 'primary' | 'secondary' | 'outline' | 'danger'
+- `size`: 'sm' | 'md' | 'lg'
+- `isLoading`: boolean
+
+#### Input
+Input component with label and error handling.
+
+```tsx
+<Input
+  label="Enter value"
+  error="Invalid input"
+  helperText="Helper text"
+/>
+```
+
+#### Card
+Container component with header and footer.
+
+```tsx
+<Card
+  title="Card Title"
+  subtitle="Subtitle"
+  footer={<Button>Action</Button>}
+>
+  Content
+</Card>
+```
+
+### FHE Components (`components/fhe/`)
+
+#### FHEProvider
+Context provider for FHE operations.
+
+```tsx
+<FHEProvider contractAddress="0x...">
+  <App />
+</FHEProvider>
+```
+
+#### EncryptionDemo
+Interactive encryption demonstration component.
+
+#### ComputationDemo
+Interactive homomorphic computation demo.
+
+#### KeyManager
+FHE key management interface.
 
 ---
 
